@@ -1,4 +1,5 @@
 mod cli;
+mod colors;
 mod config;
 mod filter;
 mod git;
@@ -8,6 +9,7 @@ use std::io::{self, BufRead, BufReader, Write};
 use std::path::{Path, PathBuf};
 use std::process::{Command, Stdio};
 
+use colors::{green_if_tty, yellow_if_tty, blue_if_tty};
 use config::Config;
 use filter::FileFilter;
 
@@ -119,23 +121,24 @@ fn main() -> io::Result<()> {
 
     // Display results
     if !added_files.is_empty() {
-        println!("Added:");
+        println!("{}:", green_if_tty("Added"));
         for path in &added_files {
             println!("  {}", path.display());
         }
     }
 
     if args.verbose && !excluded_files.is_empty() {
-        println!("\nExcluded:");
+        println!("\n{}:", yellow_if_tty("Excluded"));
         for path in &excluded_files {
             println!("  {}", path.display());
         }
     }
 
     println!(
-        "\nCode review file created at {} ({} files processed)",
+        "\n{} {} ({})",
+        blue_if_tty("Code review file created at"),
         config.output_file,
-        added_files.len()
+        blue_if_tty(&format!("{} files processed", added_files.len()))
     );
     Ok(())
 }
