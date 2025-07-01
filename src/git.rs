@@ -8,15 +8,14 @@ use std::process::{Command, Stdio};
 /// Returns a vector of file paths that have been modified, added, or are untracked.
 pub fn get_modified_files() -> io::Result<Vec<PathBuf>> {
     let output = Command::new("git")
-        .args(&["status", "--porcelain"])
+        .args(["status", "--porcelain"])
         .stdout(Stdio::piped())
         .stderr(Stdio::piped())
         .output()?;
 
     if !output.status.success() {
         let error_msg = String::from_utf8_lossy(&output.stderr);
-        return Err(io::Error::new(
-            io::ErrorKind::Other,
+        return Err(io::Error::other(
             format!("Git command failed: {}", error_msg.trim()),
         ));
     }
@@ -42,7 +41,7 @@ pub fn get_modified_files() -> io::Result<Vec<PathBuf>> {
 /// Checks if the current directory is a git repository
 pub fn is_git_repo() -> bool {
     Command::new("git")
-        .args(&["rev-parse", "--git-dir"])
+        .args(["rev-parse", "--git-dir"])
         .stdout(Stdio::null())
         .stderr(Stdio::null())
         .status()

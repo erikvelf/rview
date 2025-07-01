@@ -1,3 +1,5 @@
+use std::io::IsTerminal;
+
 /// Simple ANSI color utilities for terminal output
 pub struct Colors;
 
@@ -19,8 +21,7 @@ impl Colors {
     
     /// Checks if colors should be used (if output is to a terminal)
     pub fn should_use_colors() -> bool {
-        use std::io::IsTerminal;
-        std::io::IsTerminal::is_terminal(&std::io::stdout())
+        IsTerminal::is_terminal(&std::io::stdout())
     }
 }
 

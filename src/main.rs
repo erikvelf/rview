@@ -5,9 +5,8 @@ mod filter;
 mod git;
 
 use std::fs::{self, File, OpenOptions};
-use std::io::{self, BufRead, BufReader, Write};
-use std::path::{Path, PathBuf};
-use std::process::{Command, Stdio};
+use std::io::{self, Write};
+use std::path::Path;
 
 use colors::{green_if_tty, yellow_if_tty, blue_if_tty};
 use config::Config;
