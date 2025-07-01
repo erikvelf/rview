@@ -3,7 +3,7 @@ use std::path::PathBuf;
 use std::process::{Command, Stdio};
 
 /// Gets modified and untracked files from git status
-/// 
+///
 /// Uses `git status --porcelain` to get a machine-readable list of files.
 /// Returns a vector of file paths that have been modified, added, or are untracked.
 pub fn get_modified_files() -> io::Result<Vec<PathBuf>> {
@@ -17,7 +17,7 @@ pub fn get_modified_files() -> io::Result<Vec<PathBuf>> {
         let error_msg = String::from_utf8_lossy(&output.stderr);
         return Err(io::Error::new(
             io::ErrorKind::Other,
-            format!("Git command failed: {}", error_msg.trim())
+            format!("Git command failed: {}", error_msg.trim()),
         ));
     }
 

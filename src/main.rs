@@ -13,7 +13,11 @@ use filter::FileFilter;
 
 /// This function appends the contents of a file to the code review file,
 /// with a header indicating the file's path.
-fn append_file_to_review(review_file: &mut File, file_path: &Path, config: &Config) -> io::Result<()> {
+fn append_file_to_review(
+    review_file: &mut File,
+    file_path: &Path,
+    config: &Config,
+) -> io::Result<()> {
     // Write a header with the file path
     writeln!(
         review_file,
@@ -33,16 +37,21 @@ fn append_file_to_review(review_file: &mut File, file_path: &Path, config: &Conf
 }
 
 /// This function recursively appends all files in a directory to the code review file.
-fn append_dir_to_review(review_file: &mut File, dir_path: &Path, config: &Config, filter: &FileFilter) -> io::Result<()> {
+fn append_dir_to_review(
+    review_file: &mut File,
+    dir_path: &Path,
+    config: &Config,
+    filter: &FileFilter,
+) -> io::Result<()> {
     // Walk through the directory recursively
     for entry in fs::read_dir(dir_path)? {
         let entry = entry?;
         let path = entry.path();
-        
+
         if filter.should_exclude(&path) {
             continue;
         }
-        
+
         if path.is_file() {
             append_file_to_review(review_file, &path, config)?;
         } else if path.is_dir() {
@@ -52,22 +61,21 @@ fn append_dir_to_review(review_file: &mut File, dir_path: &Path, config: &Config
     Ok(())
 }
 
-
 fn main() -> io::Result<()> {
     let args = cli::parse_args();
-    
+
     // Check if we're in a git repository
     if !git::is_git_repo() {
         eprintln!("Error: Not in a git repository");
         std::process::exit(1);
     }
-    
+
     // Create configuration from CLI args
     let config = Config::new().with_cli_args(args.output, args.exclude);
-    
+
     // Create file filter to prevent infinite loops
     let filter = FileFilter::from_config(&config);
-    
+
     // Debug output to show what arguments were parsed
     println!("Parsed arguments:");
     println!("  Output: {}", config.output_file);
@@ -87,7 +95,7 @@ fn main() -> io::Result<()> {
 
     // Get the list of modified and untracked files from git
     let paths = git::get_modified_files()?;
-    
+
     if paths.is_empty() {
         println!("No modified files found");
         return Ok(());
@@ -102,7 +110,7 @@ fn main() -> io::Result<()> {
             println!("Excluded {}", path.display());
             continue;
         }
-        
+
         if path.is_file() {
             // If it's a file, append its contents
             append_file_to_review(&mut review_file, &path, &config)?;
@@ -117,6 +125,9 @@ fn main() -> io::Result<()> {
     }
 
     // Print a message indicating completion
-    println!("Code review file created at {} ({} files processed)", config.output_file, processed_count);
+    println!(
+        "Code review file created at {} ({} files processed)",
+        config.output_file, processed_count
+    );
     Ok(())
 }

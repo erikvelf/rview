@@ -20,7 +20,7 @@ pub fn parse_args() -> Args {
                 .long("output")
                 .value_name("FILE")
                 .help("Output file path")
-                .default_value("docs/code-review.txt")
+                .default_value("docs/code-review.txt"),
         )
         .arg(
             Arg::new("exclude")
@@ -28,7 +28,7 @@ pub fn parse_args() -> Args {
                 .long("exclude")
                 .value_name("PATTERNS")
                 .help("Exclude file patterns (comma-separated)")
-                .default_value("")
+                .default_value(""),
         )
         .get_matches();
 
@@ -37,7 +37,10 @@ pub fn parse_args() -> Args {
     let exclude = if exclude_str.is_empty() {
         Vec::new()
     } else {
-        exclude_str.split(',').map(|s| s.trim().to_string()).collect()
+        exclude_str
+            .split(',')
+            .map(|s| s.trim().to_string())
+            .collect()
     };
 
     Args { output, exclude }

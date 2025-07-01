@@ -21,14 +21,14 @@ impl Config {
             separator_length: 10,
         }
     }
-    
+
     /// Updates config with CLI arguments
     pub fn with_cli_args(mut self, output: String, exclude: Vec<String>) -> Self {
         self.output_file = output;
         self.exclude_patterns = exclude;
         self
     }
-    
+
     /// Gets the separator line for file headers
     pub fn get_separator(&self) -> String {
         self.separator_char.repeat(self.separator_length)
