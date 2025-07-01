@@ -20,10 +20,6 @@ rview [OPTIONS]
 3. **Pattern Exclusion**: Skip files matching exclude patterns
 4. **Clean Output**: Simple separator format for AI consumption
 
-### Configuration
-- Config file: `$XDG_CONFIG_HOME/rview.toml`
-- Configurable separator character and length
-- Default exclude patterns
 
 ### Output Format
 ```txt
@@ -35,18 +31,22 @@ rview [OPTIONS]
 ```
 
 ## Implementation Steps
-1. Set up Cargo.toml with dependencies (clap, serde, toml, glob)
-2. Implement CLI argument parsing
-3. Create git status integration
-4. Add file reading and aggregation logic
-5. Implement exclude pattern matching
-6. Add configuration system
+1. ✅ Set up Cargo.toml with dependencies (clap, glob)  
+2. ✅ Implement CLI argument parsing
+3. ✅ Create git status integration
+4. ✅ Add file reading and aggregation logic
+5. ✅ Implement exclude pattern matching
+6. ✅ Add modular configuration system
 7. Handle binary files and errors gracefully
-8. Test with sample repository
+8. ✅ Test with sample repository
 
 ## Dependencies
 - `clap` - CLI argument parsing
-- `serde` - Configuration serialization
-- `toml` - Configuration file format
 - `glob` - Pattern matching for excludes
 - `std::process` - Git command execution
+
+## Future Considerations
+- Configuration file support (`$XDG_CONFIG_HOME/rview.toml` with serde + toml)
+- Configurable separator character and length
+- Default exclude patterns in config
+- Enhanced error handling for edge cases
