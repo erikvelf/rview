@@ -1,5 +1,7 @@
 # rview
 
+![Preview](readme-assets/preview.png)
+
 > A simple CLI tool for AI-assisted code review that aggregates modified files into a single review file.
 
 It automatically detects modified files in your git repository and combines them into a single, well-formatted file that's perfect for AI reviewers to analyze your code changes.
@@ -243,4 +245,3 @@ MIT License - see LICENSE file for details.
 - Provides clean context to AI reviewers
 - Eliminates need to copy-paste multiple files
 - Standardized format across projects
-- Integrates seamlessly with git workflow
