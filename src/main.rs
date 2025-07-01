@@ -76,11 +76,6 @@ fn main() -> io::Result<()> {
     // Create file filter to prevent infinite loops
     let filter = FileFilter::from_config(&config);
 
-    // Debug output to show what arguments were parsed
-    println!("Parsed arguments:");
-    println!("  Output: {}", config.output_file);
-    println!("  Exclude: {:?}", config.exclude_patterns);
-
     // Create the output directory if it doesn't exist
     if let Some(parent) = Path::new(&config.output_file).parent() {
         fs::create_dir_all(parent)?;
@@ -101,33 +96,46 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
 
-    println!("Found {} modified files", paths.len());
+    // Filter and categorize files
+    let mut added_files = Vec::new();
+    let mut excluded_files = Vec::new();
 
-    // Filter and process files
-    let mut processed_count = 0;
-    for path in paths {
-        if filter.should_exclude(&path) {
-            println!("Excluded {}", path.display());
-            continue;
-        }
-
-        if path.is_file() {
-            // If it's a file, append its contents
-            append_file_to_review(&mut review_file, &path, &config)?;
-            println!("Added {}", path.display());
-            processed_count += 1;
-        } else if path.is_dir() {
-            // If it's a directory, recursively append all files inside
-            append_dir_to_review(&mut review_file, &path, &config, &filter)?;
-            println!("Added directory {}", path.display());
-            processed_count += 1;
+    for path in &paths {
+        if filter.should_exclude(path) {
+            excluded_files.push(path);
+        } else {
+            added_files.push(path);
         }
     }
 
-    // Print a message indicating completion
+    // Process added files
+    for path in &added_files {
+        if path.is_file() {
+            append_file_to_review(&mut review_file, path, &config)?;
+        } else if path.is_dir() {
+            append_dir_to_review(&mut review_file, path, &config, &filter)?;
+        }
+    }
+
+    // Display results
+    if !added_files.is_empty() {
+        println!("Added:");
+        for path in &added_files {
+            println!("  {}", path.display());
+        }
+    }
+
+    if args.verbose && !excluded_files.is_empty() {
+        println!("\nExcluded:");
+        for path in &excluded_files {
+            println!("  {}", path.display());
+        }
+    }
+
     println!(
-        "Code review file created at {} ({} files processed)",
-        config.output_file, processed_count
+        "\nCode review file created at {} ({} files processed)",
+        config.output_file,
+        added_files.len()
     );
     Ok(())
 }

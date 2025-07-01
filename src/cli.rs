@@ -7,6 +7,8 @@ pub struct Args {
     pub output: String,
     /// Exclude patterns (comma-separated)
     pub exclude: Vec<String>,
+    /// Verbose output (show excluded files)
+    pub verbose: bool,
 }
 
 /// Parses command line arguments and returns Args struct
@@ -30,6 +32,13 @@ pub fn parse_args() -> Args {
                 .help("Exclude file patterns (comma-separated)")
                 .default_value(""),
         )
+        .arg(
+            Arg::new("verbose")
+                .short('v')
+                .long("verbose")
+                .action(clap::ArgAction::SetTrue)
+                .help("Show excluded files in output"),
+        )
         .get_matches();
 
     let output = matches.get_one::<String>("output").unwrap().clone();
@@ -42,6 +51,7 @@ pub fn parse_args() -> Args {
             .map(|s| s.trim().to_string())
             .collect()
     };
+    let verbose = matches.get_flag("verbose");
 
-    Args { output, exclude }
+    Args { output, exclude, verbose }
 }
