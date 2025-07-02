@@ -21,7 +21,7 @@ pub fn parse_args() -> Args {
                 .short('o')
                 .long("output")
                 .value_name("FILE")
-                .help("Output file path")
+                .help("Output file path - Example: rview -o my-review.txt")
                 .default_value("docs/code-review.txt"),
         )
         .arg(
@@ -29,27 +29,30 @@ pub fn parse_args() -> Args {
                 .short('x')
                 .long("exclude")
                 .value_name("PATTERNS")
-                .help("Exclude file patterns (comma-separated)")
-                .default_value(""),
+                .help("Exclude file patterns (comma-separated) - Example: rview -x \"*.lock,target/,*.log\"")
+                .required(false),
         )
         .arg(
             Arg::new("verbose")
                 .short('v')
                 .long("verbose")
                 .action(clap::ArgAction::SetTrue)
-                .help("Show excluded files in output"),
+                .help("Show excluded files in output - Example: rview -v"),
         )
         .get_matches();
 
     let output = matches.get_one::<String>("output").unwrap().clone();
-    let exclude_str = matches.get_one::<String>("exclude").unwrap();
-    let exclude = if exclude_str.is_empty() {
-        Vec::new()
+    let exclude = if let Some(exclude_str) = matches.get_one::<String>("exclude") {
+        if exclude_str.is_empty() {
+            Vec::new()
+        } else {
+            exclude_str
+                .split(',')
+                .map(|s| s.trim().to_string())
+                .collect()
+        }
     } else {
-        exclude_str
-            .split(',')
-            .map(|s| s.trim().to_string())
-            .collect()
+        Vec::new()
     };
     let verbose = matches.get_flag("verbose");
 
