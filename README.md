@@ -19,7 +19,7 @@ It automatically detects modified files in your git repository and combines them
 
 ```bash
 # Clone and install
-git clone <repository-url>
+git clone https://github.com/erikvelf/rview.git
 cd rview
 ./install.sh
 ```
