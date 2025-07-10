@@ -72,9 +72,9 @@ rview --verbose
 rview [OPTIONS]
 
 Options:
-  -o, --output <FILE>       Output file path [default: docs/code-review.txt]
-  -x, --exclude <PATTERNS>  Exclude file patterns (comma-separated)
-  -v, --verbose             Show excluded files in output
+  -o, --output <FILE>       Output file path - Example: rview -o my-review.txt [default: docs/code-review.txt]
+  -x, --exclude <PATTERNS>  Exclude file patterns (comma-separated) - Example: rview -x "*.lock,target/,*.log"
+  -v, --verbose             Show excluded files in output - Example: rview -v
   -h, --help                Print help
   -V, --version             Print version
 ```
